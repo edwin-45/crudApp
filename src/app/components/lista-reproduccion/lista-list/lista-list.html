@@ -1,0 +1,61 @@
+<div class="container">
+  <header class="header">
+    <h1>Mis Listas de Reproducción</h1>
+    <div class="header-actions">
+      <button class="btn btn-primary" routerLink="/listas/nueva">
+        + Nueva Lista
+      </button>
+      <button class="btn btn-secondary" (click)="logout()">
+        Cerrar Sesión
+      </button>
+    </div>
+  </header>
+
+  @if (isLoading) {
+    <div class="loading">Cargando listas...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (!isLoading && listas.length === 0) {
+    <div class="empty-state">
+      <h3>No tienes listas de reproducción</h3>
+      <p>Crea tu primera lista para empezar</p>
+      <button class="btn btn-primary" routerLink="/listas/nueva">
+        Crear Lista
+      </button>
+    </div>
+  }
+
+  <div class="lista-grid">
+    @for (lista of listas; track lista.nombre) {
+      <div class="lista-card">
+        <div class="lista-header">
+          <h3 [routerLink]="['/listas', lista.nombre]">{{ lista.nombre }}</h3>
+          <div class="lista-actions">
+            <button
+              class="btn-icon btn-delete"
+              (click)="deleteLista(lista.nombre)"
+              title="Eliminar">
+              🗑️
+            </button>
+          </div>
+        </div>
+        <p class="lista-descripcion">{{ lista.descripcion }}</p>
+        <div class="lista-info">
+          <span class="canciones-count">
+            {{ lista.canciones?.length || 0 }} canciones
+          </span>
+        </div>
+        <button
+          class="btn btn-outline"
+          [routerLink]="['/listas', lista.nombre]">
+          Ver Detalles
+        </button>
+      </div>
+    }
+  </div>
+</div>
+

@@ -1,0 +1,145 @@
+<div class="container">
+  @if (isLoading && !lista) {
+    <div class="loading">Cargando lista...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  @if (lista) {
+    <div class="lista-header">
+      <button class="btn-back" (click)="goBack()">← Volver</button>
+      <div class="lista-info">
+        <h1>{{ lista.nombre }}</h1>
+        <p class="descripcion">{{ lista.descripcion }}</p>
+        <div class="metadata">
+          <span class="badge">{{ lista.canciones?.length || 0 }} canciones</span>
+        </div>
+      </div>
+      <div class="lista-actions">
+        <button class="btn btn-danger" (click)="deleteLista()">
+          Eliminar Lista
+        </button>
+      </div>
+    </div>
+
+    <div class="canciones-section">
+      <div class="section-header">
+        <h2>Canciones</h2>
+        <button class="btn btn-primary" (click)="toggleAddCancionForm()">
+          @if (!showAddCancionForm) {
+            <span>+ Agregar Canción</span>
+          } @else {
+            <span>✕ Cancelar</span>
+          }
+        </button>
+      </div>
+
+      @if (showAddCancionForm) {
+        <div class="add-cancion-form">
+          <h3>Nueva Canción</h3>
+          <form (ngSubmit)="addCancion()">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="titulo">Título *</label>
+                <input
+                  type="text"
+                  id="titulo"
+                  [(ngModel)]="nuevaCancion.titulo"
+                  name="titulo"
+                  class="form-control"
+                  required
+                  placeholder="Título de la canción">
+              </div>
+
+              <div class="form-group">
+                <label for="artista">Artista *</label>
+                <input
+                  type="text"
+                  id="artista"
+                  [(ngModel)]="nuevaCancion.artista"
+                  name="artista"
+                  class="form-control"
+                  required
+                  placeholder="Nombre del artista">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="album">Álbum</label>
+                <input
+                  type="text"
+                  id="album"
+                  [(ngModel)]="nuevaCancion.album"
+                  name="album"
+                  class="form-control"
+                  placeholder="Nombre del álbum">
+              </div>
+
+              <div class="form-group">
+                <label for="genero">Género</label>
+                <input
+                  type="text"
+                  id="genero"
+                  [(ngModel)]="nuevaCancion.genero"
+                  name="genero"
+                  class="form-control"
+                  placeholder="Ej: Rock, Pop, Jazz">
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="isLoading">
+              @if (!isLoading) {
+                <span>Agregar Canción</span>
+              } @else {
+                <span>Agregando...</span>
+              }
+            </button>
+          </form>
+        </div>
+      }
+
+      @if (lista.canciones && lista.canciones.length > 0) {
+        <div class="canciones-list">
+          @for (cancion of lista.canciones; track cancion.id) {
+            <div class="cancion-card">
+              <div class="cancion-number">{{ $index + 1 }}</div>
+              <div class="cancion-info">
+                <h4>{{ cancion.titulo }}</h4>
+                <p class="cancion-meta">
+                  {{ cancion.artista }}
+                  @if (cancion.album) {
+                    <span> • {{ cancion.album }}</span>
+                  }
+                </p>
+              </div>
+              <div class="cancion-details">
+                @if (cancion.genero) {
+                  <span class="badge-genre">{{ cancion.genero }}</span>
+                }
+              </div>
+              <button
+                class="btn-icon btn-remove"
+                (click)="removeCancion(cancion.id)"
+                title="Eliminar">
+                🗑️
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <p>No hay canciones en esta lista</p>
+          <button class="btn btn-primary" (click)="toggleAddCancionForm()">
+            Agregar primera canción
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

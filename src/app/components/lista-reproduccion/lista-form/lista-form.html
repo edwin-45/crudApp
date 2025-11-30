@@ -1,0 +1,58 @@
+<div class="container">
+  <div class="form-card">
+    <h2>Nueva Lista de Reproducción</h2>
+
+    <form (ngSubmit)="onSubmit()" #listaForm="ngForm">
+      <div class="form-group">
+        <label for="nombre">Nombre *</label>
+        <input
+          type="text"
+          id="nombre"
+          name="nombre"
+          [(ngModel)]="lista.nombre"
+          required
+          class="form-control"
+          placeholder="Ej: Mi playlist favorita"
+          [disabled]="isLoading">
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción *</label>
+        <textarea
+          id="descripcion"
+          name="descripcion"
+          [(ngModel)]="lista.descripcion"
+          required
+          class="form-control"
+          rows="4"
+          placeholder="Describe tu lista de reproducción"
+          [disabled]="isLoading"></textarea>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">{{ errorMessage }}</div>
+      }
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancel()"
+          [disabled]="isLoading">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="isLoading || !listaForm.valid">
+          @if (!isLoading) {
+            <span>Crear Lista</span>
+          } @else {
+            <span>Creando...</span>
+          }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
